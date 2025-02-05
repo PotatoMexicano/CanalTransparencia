@@ -6,9 +6,10 @@ export default function Informacao() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <div className="">
-        <Button variant={"outline"} className="hover:bg-primary hover:text-white">
-          <GlobeLock size={30} /> Sua segurança
+        <div className="w-full">
+        <Button variant={"outline"} className="hover:bg-primary hover:text-white w-full">
+          <GlobeLock size={30} /> 
+          <div className="max-lg:hidden">Sua segurança</div>
         </Button>
         </div>
       </DialogTrigger>

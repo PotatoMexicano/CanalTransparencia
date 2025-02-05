@@ -6,9 +6,9 @@ import { Label } from '@/components/ui/label';
 export default function Acompanhar() {
   return (
     <div>
-      <Card className="m-auto w-[500px]">
+      <Card className="m-auto">
         
-        <CardHeader>
+        <CardHeader className='text-center'>
           <CardTitle>Acompanhar chamado</CardTitle>
           <CardDescription>Informe o código de acompanhamento.</CardDescription>
         </CardHeader>
@@ -26,7 +26,7 @@ export default function Acompanhar() {
           </form>
         </CardContent>
         <CardFooter className="flex w-full">
-          <Button className='w-full'>Enviar</Button>
+          <Button className='w-full'>Acompanhar</Button>
         </CardFooter>
       </Card>
     </div>
