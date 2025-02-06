@@ -1,6 +1,3 @@
-import { CheckCircle2 } from "lucide-react";
-import { Avatar, AvatarFallback } from "../ui/avatar";
-import { Card } from "../ui/card";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "../ui/dialog";
 
 export default function CardHistorico() {
@@ -12,7 +9,7 @@ export default function CardHistorico() {
 
           <div className="flex items-center justify-between text-gray-500 mt-5">
             <div className="text-center text-sm flex gap-1">
-              <div className="font-bold text-gray-900">Administrador</div>
+              <div className="font-bold text-gray-800 dark:text-white">Administrador</div>
               <div> iniciou a avaliação</div>
             </div>
             <div className="text-sm">20 jan 2020</div>
@@ -20,16 +17,16 @@ export default function CardHistorico() {
 
           <div className="flex items-center justify-between text-gray-500 mt-5">
             <div className="text-center text-sm flex gap-1">
-              <div className="font-bold text-gray-900">Administrador</div>
+              <div className="font-bold text-gray-800 dark:text-white">Administrador</div>
               <div> começou a avaliar as evidências</div>
             </div>
             <div className="text-sm">23 jan 2020</div>
           </div>
 
-          <div className="flex flex-col gap-2 text-gray-500 mt-5 border border-gray-300 rounded-lg p-4">
+          <div className="flex flex-col gap-2 text-gray-500 mt-5 border border-gray-300 dark:border-gray-600 rounded-lg p-4">
             <div className="flex items-center justify-between text-gray-500">
               <div className="text-center text-sm flex gap-1">
-                <div className="font-bold text-gray-900">Administrador</div>
+                <div className="font-bold text-gray-800 dark:text-white">Administrador</div>
                 <div> adicionou um comentário</div>
               </div>
               <div className="text-sm">24 jan 2020</div>
@@ -42,7 +39,7 @@ export default function CardHistorico() {
           <div className="flex items-center justify-between text-gray-500 mt-5">
           {/* <CheckCircle2 /> */}
             <div className="text-center text-sm flex gap-1">
-              <div className="font-bold text-gray-900">Administrador</div>
+              <div className="font-bold text-gray-800 dark:text-white">Administrador</div>
               <div> encerrou seu chamado</div>
             </div>
             <div className="text-sm">25 jan 2020</div>
