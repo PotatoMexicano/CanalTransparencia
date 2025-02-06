@@ -3,20 +3,41 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { useState } from 'react';
-import CardToken from './CardToken';
+import CardToken from '@/components/Registrar/CardToken';
+import { useRef, useState } from 'react';
+import { useDialog } from '@/context/DialogTokenContext';
+import { toast } from 'sonner';
 
 function Registrar() {
+
+  const resetFields = () => {
+    setSubject('');
+    setMessage('');
+    setFile(null);
+
+    if (fileInputRef.current)
+      fileInputRef.current.value = '';
+  }
 
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
   const [file, setFile] = useState<File | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const [submitting, setSubmitting] = useState(false);
 
   const [token, setToken] = useState('');
-  const [isModalOpen, SetIsModalOpen] = useState(false);
+
+  const { setIsDialogOpen, setAllowCloseDialog } = useDialog();
+
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    setSubmitting(true);
 
     const formDataToSend = new FormData();
     formDataToSend.append('subject', subject);
@@ -24,13 +45,25 @@ function Registrar() {
     if (file) formDataToSend.append('file', file);
 
     try {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      setAllowCloseDialog(false);
       setToken("ABC123");
-      SetIsModalOpen(true);
+      setIsDialogOpen(true);
+
+
+      setSubmitting(false);
+      resetFields();
 
     } catch (error) {
       console.error('Error:', error);
+      if (error instanceof Error) {
+        toast.error('Ocorreu um erro', {
+          description: error.message
+        });
+      }
+      setSubmitting(false);
     }
-
   }
 
   return (
@@ -58,19 +91,18 @@ function Registrar() {
 
               <div className='flex flex-col space-y-1.5'>
                 <Label className='flex' htmlFor='file'>Arquivos</Label>
-                <Input id='file' type='file' onChange={(e) => setFile(e.target.files ? e.target.files[0] : null)} />
+                <Input id='file' type='file' ref={fileInputRef} onChange={handleFileChange} />
               </div>
             </div>
           </CardContent>
-          
+
           <CardFooter className="flex w-full">
-            <Button className='w-full bg-primary' type='submit'>Enviar</Button>
+            <Button disabled={submitting} className='w-full bg-primary' type='submit'>{!submitting ? "Enviar" : "Enviando"}</Button>
           </CardFooter>
+          
         </Card>
       </form>
-
-      <CardToken token={token} isModalOpen={isModalOpen} setIsModalOpen={SetIsModalOpen} />
-
+      <CardToken token={token} />
     </div>
   );
 }
