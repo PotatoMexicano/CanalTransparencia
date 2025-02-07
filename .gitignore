@@ -1,5 +1,31 @@
-# Created by https://www.toptal.com/developers/gitignore/api/react,csharp,aspnetcore
-# Edit at https://www.toptal.com/developers/gitignore?templates=react,csharp,aspnetcore
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+
+# Created by https://www.toptal.com/developers/gitignore/api/aspnetcore,csharp
+# Edit at https://www.toptal.com/developers/gitignore?templates=aspnetcore,csharp
 
 ### ASPNETCore ###
 ## Ignore Visual Studio temporary files, build results, and
@@ -523,38 +549,4 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 
-### react ###
-.DS_*
-logs
-**/*.backup.*
-**/*.back.*
-
-node_modules
-bower_components
-
-*.sublime*
-
-psd
-thumb
-sketch
-
-!**/glob-import/dir/node_modules
-.DS_Store
-.idea
-.pnpm-store
-*.cpuprofile
-*.local
-*.log
-/.vscode/
-/docs/.vitepress/cache
-/packages/vite/LICENSE
-dist
-dist-ssr
-explorations
-node_modules
-playground-temp
-temp
-TODOs.md
-.eslintcache
-
-# End of https://www.toptal.com/developers/gitignore/api/react,csharp,aspnetcore
+# End of https://www.toptal.com/developers/gitignore/api/aspnetcore,csharp
