@@ -5,10 +5,12 @@ import { Label } from '@/components/ui/label';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import CardHistorico from './CardHistorico';
+import { useDialog } from '@/context/DialogTokenContext';
 
 export default function Acompanhar() {
 
   const [submitting, setSubmitting] = useState(false);
+  const { setIsDialogOpen } = useDialog();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -17,6 +19,8 @@ export default function Acompanhar() {
     try {
       await new Promise(resolve => setTimeout(resolve, 500));
       setSubmitting(false);
+
+      setIsDialogOpen(true);
 
     } catch (error) {
       console.error(error);

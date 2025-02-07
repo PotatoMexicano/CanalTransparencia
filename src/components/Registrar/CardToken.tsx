@@ -3,6 +3,7 @@ import { EvervaultCard } from '@/components/ui/evervault-card'
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { toast } from "sonner"
 import { useDialog } from '@/context/DialogTokenContext';
+import { BorderBeam } from '../ui/border-beam';
 
 interface Props {
   token: string
@@ -36,16 +37,19 @@ export default function CardToken(props: Props) {
 
   return (
     <Dialog open={isDialogOpen} onOpenChange={handleModalOpen}>
-      <DialogContent>
+      <DialogContent onInteractOutside={(e) => e.preventDefault()}>
         <DialogTitle className='text-center'>Salve este código em um local seguro.</DialogTitle>
         <CopyToClipboard text={props.token}>
           <div className="flex flex-col w-full px-10 items-center justify-center h-[300px] cursor-pointer" onClick={handleCopyClipboard}>
+        <div className="relative flex w-full flex-col items-center justify-center overflow-hidden rounded-3xl border bg-background shadow-2xl md:shadow-xl">
             <EvervaultCard text={props.token} />
+          <BorderBeam size={250} duration={12} delay={9} />
           </div>
+        </div>
         </CopyToClipboard>
         <hr />
         <DialogDescription className='text-foreground text-lg text-center'>
-          <small>Dica: Você pode copiar o código clicando sobre ele.</small><br/>
+          <small>Dica: Você pode copiar o código clicando sobre ele.</small><br />
           Você vai precisar dele para acompanhar as atualizações do seu chamado.
         </DialogDescription>
       </DialogContent>

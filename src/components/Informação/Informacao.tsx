@@ -1,6 +1,7 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { GlobeLock, MapPinOffIcon, PackageIcon, VenetianMaskIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { DialogDescription } from "@radix-ui/react-dialog";
 
 export default function Informacao() {
   return (
@@ -17,6 +18,7 @@ export default function Informacao() {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Sua segurança</DialogTitle>
+          <DialogDescription></DialogDescription>
         </DialogHeader>
         <div className="flex items-center text-start">
           <MapPinOffIcon className="mr-2" size={40} /> Não coletamos informações de rastreamento (IP, local, fuso horário, etc...)
