@@ -41,11 +41,11 @@ export default function CardToken(props: Props) {
         <DialogTitle className='text-center'>Salve este código em um local seguro.</DialogTitle>
         <CopyToClipboard text={props.token}>
           <div className="flex flex-col w-full px-10 items-center justify-center h-[300px] cursor-pointer" onClick={handleCopyClipboard}>
-        <div className="relative flex w-full flex-col items-center justify-center overflow-hidden rounded-3xl border bg-background shadow-2xl md:shadow-xl">
-            <EvervaultCard text={props.token} />
-          <BorderBeam size={250} duration={12} delay={9} />
+            <div className="relative flex w-full flex-col items-center justify-center overflow-hidden rounded-3xl border bg-background shadow-2xl md:shadow-xl">
+              <EvervaultCard text={props.token} />
+              <BorderBeam size={250} duration={12} delay={9} />
+            </div>
           </div>
-        </div>
         </CopyToClipboard>
         <hr />
         <DialogDescription className='text-foreground text-lg text-center'>

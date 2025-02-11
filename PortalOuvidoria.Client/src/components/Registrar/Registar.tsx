@@ -1,28 +1,48 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import CardToken from '@/components/Registrar/CardToken';
 import { useRef, useState } from 'react';
 import { useDialog } from '@/context/DialogTokenContext';
 import { toast } from 'sonner';
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
+import { useRegisterChamadoMutation } from '@/chamadoApi';
+
+const convertFileToBase64 = (file: File): Promise<{ base64: string, mimeType: string }> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      const base64String = (reader.result as string).split(',')[1];
+      const mimeType = file.type;
+      resolve({ base64: base64String, mimeType });
+    };
+    reader.onerror = (error) => reject(error);
+  });
+};
+
+const formSchema = z.object({
+  subject: z.string()
+    .min(5, "Assunto deve possuir mais de 5 caracteres.")
+    .max(50, "Assunto deve possuir menos de 50 caracteres."),
+
+  message: z.string()
+    .min(5, "Mensagem deve possuir mais de 5 caracteres.")
+    .max(300, "Mensagem deve possuir menos de 300 caracteres."),
+
+  file: z.instanceof(File)
+    .nullable()
+    .refine((file) => !file || file.size <= 10 * 1024 * 1024, "Tamanho máximo para anexo é 10MB.")
+    .transform((value) => value ?? null),
+})
 
 function Registrar() {
 
-  const resetFields = () => {
-    setSubject('');
-    setMessage('');
-    setFile(null);
-
-    if (fileInputRef.current)
-      fileInputRef.current.value = '';
-  }
-
-  const [subject, setSubject] = useState('');
-  const [message, setMessage] = useState('');
-  const [file, setFile] = useState<File | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const inputFileRef = useRef<HTMLInputElement>(null);
 
   const [submitting, setSubmitting] = useState(false);
 
@@ -30,30 +50,53 @@ function Registrar() {
 
   const { setIsDialogOpen, setAllowCloseDialog } = useDialog();
 
-  const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
-  }
+  const [registerChamado] = useRegisterChamadoMutation();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      message: "",
+      subject: "",
+      file: null
+    },
+  })
+
+  const handleSubmit = async (values: z.infer<typeof formSchema>) => {
 
     setSubmitting(true);
 
-    const formDataToSend = new FormData();
-    formDataToSend.append('subject', subject);
-    formDataToSend.append('message', message);
-    if (file) formDataToSend.append('file', file);
-
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      let base64File: string | null = null;
+      let mimeType: string | null = null;
 
-      setAllowCloseDialog(false);
-      setToken("ABC123");
-      setIsDialogOpen(true);
+      if (values.file) {
+        const { base64, mimeType: type } = await convertFileToBase64(values.file);
+        base64File = base64;
+        mimeType = type;
+      }
+      const response = await registerChamado({
+        assunto: values.subject,
+        mensagem: values.message,
+        file: base64File,
+        mimetype: mimeType,
+      });
 
+      if (response.data?.status === 200) {
+        setAllowCloseDialog(false);
+        setToken(response.data.detail);
+        setIsDialogOpen(true);
+        setSubmitting(false);
 
+        form.reset();
+
+        if (inputFileRef.current){
+          inputFileRef.current.value = "";
+        }
+
+      } else {
+        toast.error("Ocorreu um erro na solicitação");
+      }
       setSubmitting(false);
-      resetFields();
 
     } catch (error) {
       console.error('Error:', error);
@@ -68,40 +111,75 @@ function Registrar() {
 
   return (
     <div>
-      <form onSubmit={handleSubmit}>
-        <Card className="m-auto">
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(handleSubmit)}>
+          <Card className="m-auto">
 
-          <CardHeader className='text-center'>
-            <CardTitle>Abrir chamado</CardTitle>
-            <CardDescription>Preencha as informações do seu chamado.</CardDescription>
-          </CardHeader>
+            <CardHeader className='text-center'>
+              <CardTitle>Abrir chamado</CardTitle>
+              <CardDescription>Preencha as informações do seu chamado.</CardDescription>
+            </CardHeader>
 
-          <CardContent>
-            <div className="grid w-full items-center gap-4">
+            <CardContent>
+              <div className="grid w-full items-center gap-4">
 
-              <div className="grid w-full items-center gap-1.5">
-                <Label className='flex' htmlFor="subject">Assunto</Label>
-                <Input id="subject" placeholder="Assunto" maxLength={50} value={subject} onChange={(e) => setSubject(e.target.value)} />
+                <div className="grid w-full items-center gap-1.5">
+                  <FormField
+                    control={form.control}
+                    name='subject'
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Assunto</FormLabel>
+                        <FormControl>
+                          <Input autoComplete='off' placeholder="Assunto" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )} />
+                </div>
+
+                <div className="flex flex-col space-y-1.5">
+                  <FormField
+                    control={form.control}
+                    name='message'
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Mensagem</FormLabel>
+                        <FormControl>
+                          <Textarea placeholder='Sua mensagem' {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <div className='flex flex-col space-y-1.5'>
+                  <FormField
+                    control={form.control}
+                    name='file'
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Arquivos</FormLabel>
+                        <FormControl>
+                          <Input type='file' onChange={(e) => field.onChange(e.target.files?.[0] || null)} onBlur={field.onBlur} name={field.name} ref={inputFileRef} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
               </div>
+            </CardContent>
 
-              <div className="flex flex-col space-y-1.5">
-                <Label className='flex' htmlFor="message">Mensagem</Label>
-                <Textarea placeholder='Sua mensagem' id='message' maxLength={300} value={message} onChange={(e) => setMessage(e.target.value)} />
-              </div>
+            <CardFooter className="flex w-full">
+              <Button disabled={submitting} className='w-full bg-primary' type='submit'>{!submitting ? "Enviar" : "Enviando"}</Button>
+            </CardFooter>
 
-              <div className='flex flex-col space-y-1.5'>
-                <Label className='flex' htmlFor='file'>Arquivos</Label>
-                <Input id='file' type='file' ref={fileInputRef} onChange={handleFileChange} />
-              </div>
-            </div>
-          </CardContent>
+          </Card>
 
-          <CardFooter className="flex w-full">
-            <Button disabled={submitting} className='w-full bg-primary' type='submit'>{!submitting ? "Enviar" : "Enviando"}</Button>
-          </CardFooter>
-          
-        </Card>
-      </form>
+        </form>
+      </Form>
       <CardToken token={token} />
     </div>
   );
