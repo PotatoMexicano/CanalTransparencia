@@ -1,4 +1,5 @@
-﻿using PortalOuvidoria.Domain.Entities;
+﻿using PortalOuvidoria.Domain.Constants;
+using PortalOuvidoria.Domain.Entities;
 using PortalOuvidoria.Domain.Interfaces;
 
 namespace PortalOuvidoria.WebServer.Extensions;
@@ -15,11 +16,11 @@ public static class DbContextExtensions
 
         Chamado[] chamados = new[]
         {
-            new Chamado("Chamado - 1", "Teste de chamado"),
-            new Chamado("Chamado - 2", "Teste de chamado"),
-            new Chamado("Chamado - 3", "Teste de chamado"),
-            new Chamado("Chamado - 4", "Teste de chamado"),
-            new Chamado("Chamado - 5", "Teste de chamado"),
+            new Chamado("Chamado - 0", "Teste de chamado", "AAAAAAAAAA", Situacao.Registrado),
+            new Chamado("Chamado - 1", "Teste de chamado", "BBBBBBBBBB", Situacao.Analisando),
+            new Chamado("Chamado - 2", "Teste de chamado", "CCCCCCCCCC", Situacao.VerificandoEvidencias),
+            new Chamado("Chamado - 3", "Teste de chamado", "DDDDDDDDDD", Situacao.AtribuidoComentarios),
+            new Chamado("Chamado - 4", "Teste de chamado", "EEEEEEEEEE", Situacao.Finalizado),
         };
 
         foreach (Chamado? chamado in chamados)
