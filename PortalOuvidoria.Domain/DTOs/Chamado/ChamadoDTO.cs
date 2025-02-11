@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using PortalOuvidoria.Domain.Constants;
 
 namespace PortalOuvidoria.Domain.DTOs.Chamado;
 public class ChamadoDTO
@@ -17,6 +13,7 @@ public class ChamadoDTO
     public DateTime? UTC_DataRegistro_25Dias { get; set; }
 
     public Int32 IdSituacao { get; set; }
+    public String Situacao { get; set; } = nameof(Domain.Constants.Situacao.Registrado);
 
     public DateTime? UTC_DataAnalise { get; set; }
     public DateTime? UTC_DataEvidencia { get; set; }

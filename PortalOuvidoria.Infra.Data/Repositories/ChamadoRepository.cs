@@ -9,7 +9,7 @@ public class ChamadoRepository(ApplicationDbContext context) : IChamadoRepositor
 {
     public async Task<Chamado?> ObterChamadoAsync(String token, CancellationToken cancellation)
     {
-        Chamado? chamado = await context.Chamados.Where(x => x.TokenAcompanhamento == token).FirstOrDefaultAsync();
+        Chamado? chamado = await context.Chamados.Where(x => x.TokenAcompanhamento.ToUpper() == token.ToUpper()).FirstOrDefaultAsync();
         return chamado;
     }
 
