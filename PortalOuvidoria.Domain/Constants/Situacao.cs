@@ -11,8 +11,8 @@ public class Situacao
     {
         {Registrado, nameof(Registrado)},
         {Analisando, nameof(Analisando) },
-        {VerificandoEvidencias, nameof(VerificandoEvidencias) },
-        {AtribuidoComentarios, nameof(AtribuidoComentarios) },
+        {VerificandoEvidencias, "Verificando Evidencias" },
+        {AtribuidoComentarios, "Atribuido Comentarios" },
         {Finalizado, nameof(Finalizado) }
     };
 

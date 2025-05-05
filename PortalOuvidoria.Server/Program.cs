@@ -1,8 +1,7 @@
-using PortalOuvidoria.Server.Extensions;
+using PortalOuvidoria.Application.Services;
 using PortalOuvidoria.WebServer.Extensions;
-using Scalar.AspNetCore;
-using System.Text.Json.Serialization;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace PortalOuvidoria.WebServer;
 
@@ -12,12 +11,17 @@ public class Program
     {
         WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
+        builder.WebHost.UseKestrel(options =>
+        {
+            options.ListenAnyIP(5299);
+        });
+
         builder.Configuration.AddJsonFile("appsettings.json").AddUserSecrets<Program>();
 
         builder.Services.AddInfraestructure(builder.Configuration);
 
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddOpenApi();
+        builder.Services.AddSwaggerGen();
 
         builder.Services.AddControllers().AddJsonOptions(options =>
         {
@@ -29,27 +33,28 @@ public class Program
 
         builder.Services.AddCors(options =>
         {
-            if (builder.Environment.IsDevelopment())
-            {
-                options.AddDefaultPolicy(builder =>
-                    {
-                        builder.WithOrigins("http://localhost:5173", "https://localhost:5173", "http://192.168.245.75:5173")
-                        .AllowAnyMethod()
-                        .AllowAnyHeader();
-                    });
-            }
-            else
-            {
-                options.AddDefaultPolicy(builder =>
+            options.AddDefaultPolicy(builder =>
                 {
-                    builder.WithOrigins("http://*.equilibrioflorestal.com.br/*", "http://*.equilibrioflorestal.com.br/*")
+                    builder.WithOrigins("http://192.168.7.128:5299", "http://192.168.7.128:5173")
                     .AllowAnyMethod()
-                    .AllowAnyHeader();
+                    .AllowAnyHeader()
+                    .AllowCredentials();
                 });
-            }
         });
 
+        builder.Services.AddSignalR();
+
         WebApplication app = builder.Build();
+
+        app.MapHub<NotificationService>("/hub/notification");
+
+        app.UseAuthentication();
+        app.UseAuthorization();
+
+        app.UseDefaultFiles();
+        app.MapStaticAssets();
+
+        app.MapFallbackToFile("/index.html");
 
         app.UseCors();
 
@@ -58,14 +63,8 @@ public class Program
         if (app.Environment.IsDevelopment())
         {
             app.SeedDatabase();
-            app.MapOpenApi();
-            app.MapScalarApiReference(options =>
-            {
-                options.WithDownloadButton(true)
-                .WithTheme(ScalarTheme.Purple)
-                .WithDefaultHttpClient(ScalarTarget.JavaScript, ScalarClient.Axios);
-
-            });
+            app.UseSwagger();
+            app.UseSwaggerUI();
         }
 
         app.Run();

@@ -10,7 +10,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
-import { useRegisterChamadoMutation } from '@/chamadoApi';
+import { useRegisterChamadoMutation } from '@/api/chamadoApi';
+import { ShineBorder } from '../ui/shine-border';
+import { useTheme } from '@/context/ThemeContext';
 
 const convertFileToBase64 = (file: File): Promise<{ base64: string, mimeType: string }> => {
   return new Promise((resolve, reject) => {
@@ -41,6 +43,8 @@ const formSchema = z.object({
 })
 
 function Registrar() {
+
+  const theme = useTheme();
 
   const inputFileRef = useRef<HTMLInputElement>(null);
 
@@ -89,7 +93,7 @@ function Registrar() {
 
         form.reset();
 
-        if (inputFileRef.current){
+        if (inputFileRef.current) {
           inputFileRef.current.value = "";
         }
 
@@ -113,70 +117,72 @@ function Registrar() {
     <div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)}>
-          <Card className="m-auto">
+          <ShineBorder color={theme.theme === "dark" ? "white" : "black"} className='w-full p-0'>
+            <Card className="m-auto border-0">
 
-            <CardHeader className='text-center'>
-              <CardTitle>Abrir chamado</CardTitle>
-              <CardDescription>Preencha as informações do seu chamado.</CardDescription>
-            </CardHeader>
+              <CardHeader className='text-center'>
+                <CardTitle>Abrir chamado</CardTitle>
+                <CardDescription>Preencha as informações do seu chamado.</CardDescription>
+              </CardHeader>
 
-            <CardContent>
-              <div className="grid w-full items-center gap-4">
+              <CardContent>
+                <div className="grid w-full items-center gap-4">
 
-                <div className="grid w-full items-center gap-1.5">
-                  <FormField
-                    control={form.control}
-                    name='subject'
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Assunto</FormLabel>
-                        <FormControl>
-                          <Input autoComplete='off' placeholder="Assunto" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )} />
+                  <div className="grid w-full items-center gap-1.5">
+                    <FormField
+                      control={form.control}
+                      name='subject'
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Assunto</FormLabel>
+                          <FormControl>
+                            <Input autoComplete='off' placeholder="Assunto" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )} />
+                  </div>
+
+                  <div className="flex flex-col space-y-1.5">
+                    <FormField
+                      control={form.control}
+                      name='message'
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Mensagem</FormLabel>
+                          <FormControl>
+                            <Textarea placeholder='Sua mensagem' {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  <div className='flex flex-col space-y-1.5'>
+                    <FormField
+                      control={form.control}
+                      name='file'
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Arquivos</FormLabel>
+                          <FormControl>
+                            <Input type='file' onChange={(e) => field.onChange(e.target.files?.[0] || null)} onBlur={field.onBlur} name={field.name} ref={inputFileRef} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
                 </div>
+              </CardContent>
 
-                <div className="flex flex-col space-y-1.5">
-                  <FormField
-                    control={form.control}
-                    name='message'
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Mensagem</FormLabel>
-                        <FormControl>
-                          <Textarea placeholder='Sua mensagem' {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
+              <CardFooter className="flex w-full">
+                <Button disabled={submitting} className='w-full bg-primary' type='submit'>{!submitting ? "Enviar" : "Enviando"}</Button>
+              </CardFooter>
 
-                <div className='flex flex-col space-y-1.5'>
-                  <FormField
-                    control={form.control}
-                    name='file'
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Arquivos</FormLabel>
-                        <FormControl>
-                          <Input type='file' onChange={(e) => field.onChange(e.target.files?.[0] || null)} onBlur={field.onBlur} name={field.name} ref={inputFileRef} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-              </div>
-            </CardContent>
-
-            <CardFooter className="flex w-full">
-              <Button disabled={submitting} className='w-full bg-primary' type='submit'>{!submitting ? "Enviar" : "Enviando"}</Button>
-            </CardFooter>
-
-          </Card>
+            </Card>
+          </ShineBorder>
 
         </form>
       </Form>

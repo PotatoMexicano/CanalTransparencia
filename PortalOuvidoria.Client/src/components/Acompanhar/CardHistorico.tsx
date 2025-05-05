@@ -1,6 +1,6 @@
 import { useDialog } from "@/context/DialogTokenContext";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "../ui/dialog";
-import { AcompanharChamadoResponse } from "@/chamadoApi";
+import { AcompanharChamadoResponse } from "@/api/chamadoApi";
 import { formatDate } from "@/utils/utils";
 
 interface Props {

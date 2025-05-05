@@ -9,7 +9,9 @@ import { z } from "zod";
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
-import { AcompanharChamadoResponse, ErrorResponse, useLazyFetchChamadoQuery } from '@/chamadoApi';
+import { AcompanharChamadoResponse, ErrorResponse, useLazyFetchChamadoQuery } from '@/api/chamadoApi';
+import { ShineBorder } from '../ui/shine-border';
+import { useTheme } from '@/context/ThemeContext';
 
 const formSchema = z.object({
   token: z.string()
@@ -18,7 +20,8 @@ const formSchema = z.object({
 });
 
 export default function Acompanhar() {
-
+  const theme = useTheme();
+  
   const [data, setData] = useState<AcompanharChamadoResponse | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const { setIsDialogOpen } = useDialog();
@@ -69,6 +72,7 @@ export default function Acompanhar() {
 
   return (
     <div>
+      <ShineBorder color={theme.theme === "dark" ? "white" : "black"} className='w-full p-0'>
       <Card className="m-auto">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(handleSubmit)}>
@@ -108,6 +112,7 @@ export default function Acompanhar() {
         )}
 
       </Card>
+      </ShineBorder>
     </div>
   )
 }
