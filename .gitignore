@@ -545,3 +545,8 @@ sketch
 # End of https://www.toptal.com/developers/gitignore/api/react,aspnetcore,csharp
 PortalOuvidoria.Server/wwwroot
 PortalOuvidoria.Client/.vscode/launch.json
+PortalOuvidoria.Client/dist
+
+*.db-shm
+*.db-wal
+*.zip

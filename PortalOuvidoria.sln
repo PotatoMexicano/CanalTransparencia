@@ -5,7 +5,7 @@ VisualStudioVersion = 17.11.35312.102
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PortalOuvidoria.WebServer", "PortalOuvidoria.Server\PortalOuvidoria.WebServer.csproj", "{B7EA90A6-49BE-45F7-84A1-5479AFE60B9F}"
 EndProject
-Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "PortalOuvidoria.WebClient", "PortalOuvidoria.client\PortalOuvidoria.WebClient.esproj", "{3B80EFDF-BFDA-4594-947F-F91130957E2A}"
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "PortalOuvidoria.WebClient", "PortalOuvidoria.Client\PortalOuvidoria.WebClient.esproj", "{3B80EFDF-BFDA-4594-947F-F91130957E2A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PortalOuvidoria.Domain", "PortalOuvidoria.Domain\PortalOuvidoria.Domain.csproj", "{19CF7320-498F-4D3C-8E11-E744BAADA6C7}"
 EndProject

@@ -35,7 +35,7 @@ public class Program
         {
             options.AddDefaultPolicy(builder =>
                 {
-                    builder.WithOrigins("http://192.168.7.128:5299", "http://192.168.7.128:5173")
+                    builder.WithOrigins("http://192.168.7.128:5299", "http://localhost:5299")
                     .AllowAnyMethod()
                     .AllowAnyHeader()
                     .AllowCredentials();
@@ -51,21 +51,22 @@ public class Program
         app.UseAuthentication();
         app.UseAuthorization();
 
-        app.UseDefaultFiles();
-        app.MapStaticAssets();
-
-        app.MapFallbackToFile("/index.html");
-
         app.UseCors();
 
         app.MapControllers();
 
+        app.SeedDatabase();
+
         if (app.Environment.IsDevelopment())
         {
-            app.SeedDatabase();
             app.UseSwagger();
             app.UseSwaggerUI();
         }
+
+        app.UseDefaultFiles();
+        app.MapStaticAssets();
+
+        app.MapFallbackToFile("/index.html");
 
         app.Run();
     }
